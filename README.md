@@ -1,0 +1,1 @@
+# Openbook resource folder files
