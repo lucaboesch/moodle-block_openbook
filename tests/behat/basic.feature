@@ -49,12 +49,18 @@ Feature: Basic tests for Openbook resource folder files
     And I press "Save changes"
     And I should see "teacher_file.pdf"
     And I am on "Course 1" course homepage with editing mode on
-    And I am on the "Quiz 1" "mod_quiz > Edit" page
+    And I am on the "Quiz 1" "mod_quiz > View" page
     And the add block selector should contain "Openbook resource folder files..." block
     And the following "blocks" exist:
-      | blockname | contextlevel    | reference | pagetypepattern  | defaultregion | title                          | Take files from this Openbook resource folder |
-      | openbook  | Activity module | q1        | mod-quiz-attempt | side-pre      | Openbook resource folder files | Openbook resource folder 1                    |
+      | blockname | contextlevel    | reference | pagetypepattern | defaultregion | title                          | openbook                   |
+      | openbook  | Activity module | q1        | mod-quiz-*      | side-pre      | Openbook resource folder files | Openbook resource folder 1 |
+    And I am on the "Quiz 1" "mod_quiz > View" page
+    And I configure the "Openbook resource folder files" block
+    And I set the field "Take files from this Openbook resource folder" to "Openbook resource folder 1"
+    And I press "Save changes"
+    And I should see "Openbook resource folder files"
+    And I should see "Openbook resource folder 1"
     When I am on the "Quiz 1" "quiz activity" page logged in as student1
     And I press "Attempt quiz"
     Then "Openbook resource folder files" "block" should exist
-    And I should see "Access is granted to the"
+    And I should see "Access is granted to the Openbook resource folder 1 Openbook resource folder containing these files:"

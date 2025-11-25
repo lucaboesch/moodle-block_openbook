@@ -31,25 +31,11 @@ class block_openbook extends block_base {
      */
     protected $openbookcm = null;
 
-    /** @var stdClass course data. */
-    public $course;
-
     /**
-     * Block initialisation
+     * Core function used to initialize the block.
      */
     public function init() {
         $this->title = get_string('pluginname', 'block_openbook');
-    }
-
-    function specialization() {
-        global $CFG, $DB;
-
-        // Load userdefined title and make sure it's never empty
-        if (empty($this->config->title)) {
-            $this->title = get_string('pluginname','block_openbook');
-        } else {
-            $this->title = format_string($this->config->title, true, ['context' => $this->context]);
-        }
     }
 
     #[\Override]
@@ -65,8 +51,35 @@ class block_openbook extends block_base {
             'mod-quiz-report' => true,
             'mod-quiz-overrides' => true,
             'mod' => false,
-            'my' => false
+            'my' => false,
         ];
+    }
+
+    #[\Override]
+    public function specialization() {
+        // Load userdefined title and make sure it's never empty.
+        if (empty($this->config->title)) {
+            $this->title = get_string('pluginname', 'block_openbook');
+        } else {
+            $this->title = format_string($this->config->title, true, ['context' => $this->context]);
+        }
+
+        if (empty($this->config->openbook)) {
+            return false;
+        }
+    }
+
+    /**
+     * Replace the instance's configuration data with those currently in $this->config;
+     *
+     * @param bool $nolongerused
+     * @return void
+     */
+    public function instance_config_commit($nolongerused = false) {
+        // Unset config variables that are no longer used.
+        unset($this->config->openbook);
+        unset($this->config->courseid);
+        parent::instance_config_commit($nolongerused);
     }
 
     /**
@@ -96,15 +109,6 @@ class block_openbook extends block_base {
     }
 
     /**
-     * Replace the instance's configuration data with those currently in $this->config;
-     */
-    function instance_config_commit($nolongerused = false) {
-        // Unset config variables that are no longer used.
-        unset($this->config->courseid);
-        parent::instance_config_commit($nolongerused);
-    }
-
-    /**
      * Checks if openbook is available - it should located in the same course
      *
      * @return null|cm_info|stdClass object with properties 'id' (course module id) and 'uservisible'
@@ -119,8 +123,7 @@ class block_openbook extends block_base {
         if (!empty($this->openbookcm)) {
             return $this->openbookcm;
         }
-
-        if (!empty($this->page->course->id)) {
+        if (!empty($this->page->course) && !empty($this->page->course->id)) {
             // First check if openbook belongs to the current course (we don't need to make any DB queries to find it).
             $modinfo = get_fast_modinfo($this->page->course);
             if (isset($modinfo->instances['openbook'][$this->config->openbook])) {
@@ -132,39 +135,83 @@ class block_openbook extends block_base {
             }
         }
 
+        // Find course module id for the given openbook.
+        $cm = $DB->get_record_sql(
+            "SELECT cm.id, cm.visible AS uservisible
+              FROM {course_modules} cm
+                   JOIN {modules} md ON md.id = cm.module
+                   JOIN {openbook} o ON o.id = cm.instance
+             WHERE o.id = :instance AND md.name = :modulename",
+            ['instance' => $this->config->openbook, 'modulename' => 'openbook']
+        );
+
+        if ($cm) {
+            // This is a valid openbook resource folder, create an object with properties 'id' and 'uservisible'.
+            $this->openbookcm = $cm;
+        } else if (empty($this->openbookcm)) {
+            // Openbook does not exist. Remove it in the config so we don't repeat this check again later.
+            $this->config->openbook = 0;
+            $this->instance_config_commit();
+        }
+
         if (empty($this->openbookcm)) {
             // Openbook does not exist. Remove it in the config so we don't repeat this check again later.
             $this->config->openbook = 0;
             $this->instance_config_commit();
-            return $this->openbookcm;
+            return null;
         }
         return $this->openbookcm;
     }
 
     #[\Override]
-    function instance_allow_multiple() {
+    public function instance_allow_multiple() {
         // Are you going to allow multiple instances of each block?
-        // If yes, then it is assumed that the block WILL USE per-instance configuration
+        // If yes, then it is assumed that the block WILL USE per-instance configuration.
         return true;
     }
 
     /**
-     * Get content
+     * Returns the contents.
      *
-     * @return stdClass
+     * @return stdClass contents of block
      */
     public function get_content() {
-        $a = new stdClass();
-        $a->folder = 'folder not linked';
-        $a->files = "bar1.pdf, bar2.pdf";
-        if ($this->content !== null) {
+        global $DB;
+        if (isset($this->content)) {
             return $this->content;
         }
-        $this->content = (object) [
-            'footer' => '',
-            'text' => get_string('accessgranted', 'block_openbook', $a),
-        ];
+        $this->content = new stdClass();
+        $this->content->text = '';
+        $this->content->footer = '';
+        if (empty($this->instance)) {
+            // No configured/visible openbook — nothing to render.
+            return $this->content;
+        }
+
+        if (isset($this->config->openbook)) {
+            $renderable = new \block_openbook\output\main($this->config->openbook, $this->get_openbook_cm());
+            $renderer = $this->page->get_renderer('block_openbook');
+
+            $this->content = new stdClass();
+            $this->content->text = $renderer->render($renderable);
+        }
+        $this->content->footer = '';
+
         return $this->content;
+    }
+
+    /**
+     * Serialize and store config data
+     *
+     * @param stdclass $data
+     * @param bool $nolongerused
+     */
+    public function instance_config_save($data, $nolongerused = false) {
+        $config = clone($data);
+
+        $config->openbook = $data->openbook;
+
+        parent::instance_config_save($config, $nolongerused);
     }
 
     /**
