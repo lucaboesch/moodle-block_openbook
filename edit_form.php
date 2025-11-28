@@ -23,6 +23,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_openbook_edit_form extends block_edit_form {
+    #[\Override]
     protected function specific_definition($mform) {
         global $DB;
 
@@ -30,20 +31,25 @@ class block_openbook_edit_form extends block_edit_form {
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
 
         $mform->addElement('text', 'config_title', get_string('title', 'block_openbook'));
-        $mform->setDefault('config_title', get_string('pluginname','block_openbook'));
         $mform->setType('config_title', PARAM_TEXT);
+        $mform->setDefault('config_title', get_string('pluginname', 'block_openbook'));
 
         // Select Openbook resource folders to put in dropdown box ...
-        $openbooks = $DB->get_records_select_menu('openbook', 'course = ?',
-            [$this->get_course_id()], 'name', 'id,name');
-        foreach($openbooks as $key => $value) {
+        $openbooks = $DB->get_records_select_menu(
+            'openbook',
+            'course = ?',
+            [$this->get_course_id()],
+            'name',
+            'id,name'
+        );
+        foreach ($openbooks as $key => $value) {
             $openbooks[$key] = strip_tags(format_string($value, true));
         }
         $mform->addElement('select', 'config_openbook', get_string('select_openbook', 'block_openbook'), $openbooks);
-   }
+    }
 
     /**
-     * Returns id of the course where this block is located in a quiz
+     * Returns id of the course where this block is located in one of its quizzes
      *
      * @return int
      */
@@ -56,15 +62,6 @@ class block_openbook_edit_form extends block_edit_form {
     }
 
     /**
-     * Returns id of the context where this block is located
-     *
-     * @return int
-     */
-    protected function get_context_id(): int {
-        return $this->block->get_owning_activity()->id;
-    }
-
-        /**
      * Display the configuration form when block is being added to the page
      *
      * @return bool

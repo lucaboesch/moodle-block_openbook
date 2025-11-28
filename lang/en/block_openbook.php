@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['accessgranted'] = 'Access is granted to the {$a->folder} Openbook resource folder containing these files:<br/>{$a->files}';
+$string['accessgranted'] = 'Access is granted to the {$a} Openbook resource folder containing these files:';
 $string['openbook:addinstance'] = 'Add a new Openbook resource folder files block';
 $string['openbook:myaddinstance'] = 'Add a new Openbook resource folder files block to Dashboard';
 $string['pluginname'] = 'Openbook resource folder files';

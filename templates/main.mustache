@@ -1,0 +1,42 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_openbook/main
+
+    This template renders the main content area for the openbook block.
+
+    Example context (json):
+    {
+            "openbooklink": "Access is granted to the Openbook resource folder 1 Openbook resource folder containing these files:",
+            "ownfilestitle": "Own files",
+            "teacherfilestitle": " Teacher files",
+            "sharedfilestitle": "Shared files"
+    }
+}}
+
+<div id="block-openbook-{{uniqid}}" class="block-openbook block-cards mb-3" data-region="openbook" role="navigation">
+    {{{openbooklink}}}
+</div>
+{{#ownfilestitle}}
+<h4 class="h6 card-title">{{ownfilestitle}}</h4>
+{{/ownfilestitle}}
+{{#teacherfilestitle}}
+    <h4 class="h6 card-title">{{teacherfilestitle}}</h4>
+{{/teacherfilestitle}}
+{{#sharedfilestitle}}
+    <h4 class="h6 card-title">{{sharedfilestitle}}</h4>
+{{/sharedfilestitle}}
