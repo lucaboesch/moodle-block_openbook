@@ -23,9 +23,11 @@
     {
             "openbooklink": "Access is granted to the Openbook resource folder 1 Openbook resource folder containing these files:",
             "ownfilestitle": "Own files",
+            "ownfiles": "<a target=\"_blank\" href=\"pdflink1.pdf\">pdfname1</a><br><a target=\"_blank\" href=\"pdflink1.pdf\">pdfname1</a>",
             "teacherfilestitle": " Teacher files",
             "teacherfiles": "<a target=\"_blank\" href=\"pdflink1.pdf\">pdfname1</a><br><a target=\"_blank\" href=\"pdflink1.pdf\">pdfname1</a>",
-            "sharedfilestitle": "Shared files"
+            "sharedfilestitle": "Shared files",
+            "sharedfiles": "<a target=\"_blank\" href=\"pdflink1.pdf\">pdfname1</a><br><a target=\"_blank\" href=\"pdflink1.pdf\">pdfname1</a>"
     }
 }}
 
@@ -33,8 +35,8 @@
     {{{openbooklink}}}
 </div>
 {{#ownfilestitle}}
-<h4 class="h6 card-title">{{ownfilestitle}}</h4>
-<div class="mb-3"></div>
+    <h4 class="h6 card-title">{{ownfilestitle}}</h4>
+    <div class="mb-3">{{{ownfiles}}}</div>
 {{/ownfilestitle}}
 {{#teacherfilestitle}}
     <h4 class="h6 card-title mt-3">{{teacherfilestitle}}</h4>
@@ -42,4 +44,5 @@
 {{/teacherfilestitle}}
 {{#sharedfilestitle}}
     <h4 class="h6 card-title mt-3">{{sharedfilestitle}}</h4>
+    <div>{{{sharedfiles}}}</div>
 {{/sharedfilestitle}}
