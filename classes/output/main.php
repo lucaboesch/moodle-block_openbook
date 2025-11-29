@@ -66,6 +66,8 @@ class main implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         global $DB;
         $openbook = $DB->get_record('openbook', ['id' => $this->openbookid], '*', IGNORE_MISSING);
+        $openpdffilesinpdfjs = $openbook->openpdffilesinpdfjs;
+        $uselegacyviewer = $openbook->uselegacyviewer;
 
         $openbookurl = new \moodle_url('/mod/openbook/view.php', [
             'id' => $this->openbookcm->id,
@@ -75,7 +77,79 @@ class main implements renderable, templatable {
         $data = new stdClass();
         $data->openbooklink = get_string('accessgranted', 'block_openbook', $a);
         $data->ownfilestitle = get_string('myfiles', 'mod_openbook');
-        $data->teacherfilestitle = get_string('teacher_files', 'mod_openbook');
+
+        // Teacher files.
+
+        $teacherfiles = [];
+
+        $sql = "SELECT f.*
+                  FROM {files} f
+                  JOIN {context} c ON c.id = f.contextid AND c.contextlevel = :contextlevel
+                  JOIN {course_modules} cm ON cm.id = c.instanceid
+                 WHERE f.component = 'mod_openbook'
+                   AND f.filearea = 'commonteacherfiles'
+                   AND f.filename <> '.'
+                   AND cm.instance = :openbookid
+                   AND cm.module = (SELECT id FROM {modules} WHERE name = 'openbook')
+              ORDER BY f.filepath, f.filename";
+        $params = ['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE];
+
+        $records = $DB->get_records_sql($sql, $params);
+        foreach ($records as $f) {
+            if ($openpdffilesinpdfjs && $f->mimetype === 'application/pdf') {
+                if ($uselegacyviewer) {
+                    $pdfviewer = 'pdfjs-5.4.394-legacy-dist';
+                } else {
+                    $pdfviewer = 'pdfjs-5.4.394-dist';
+                }
+
+                $pluginfilerawurl = \moodle_url::make_pluginfile_url(
+                    $f->contextid,
+                    'mod_openbook',
+                    'commonteacherfiles',
+                    $f->itemid,
+                    '/',
+                    $f->filename,
+                    true
+                );
+
+                $pdfjsurl = new \moodle_url('/mod/openbook/' . $pdfviewer . '/web/viewer.html', [
+                    'file' => $pluginfilerawurl->out(false),
+                ]);
+                $teacherfiles[] = (object) [
+                    'filename' => $f->filename,
+                    'filepath' => $f->filepath,
+                    'url' => $pdfjsurl,
+                ];
+            } else {
+                $url =
+                    \moodle_url::make_pluginfile_url(
+                        $f->contextid,
+                        $f->component,
+                        $f->filearea,
+                        $f->itemid,
+                        $f->filepath,
+                        $f->filename,
+                        false,
+                    );
+                $teacherfiles[] = (object) [
+                    'filename' => format_string($f->filename),
+                    'filepath' => $f->filepath,
+                    'url' => $url->out(false),
+                ];
+            }
+        }
+        $teacherfilelinks = [];
+        foreach ($teacherfiles as $f) {
+            $teacherfilelinks[] = \html_writer::link($f->url, $f->filename, ['target' => '_blank']);
+        }
+        if (!empty($teacherfiles)) {
+            $data->teacherfiles = implode('<br/>', $teacherfilelinks);
+            $data->teacherfilestitle = get_string('teacher_files', 'mod_openbook');
+        }
+
+        // Shared files.
+
         $data->sharedfilestitle = get_string('publicfiles', 'mod_openbook');
         return $data;
     }
