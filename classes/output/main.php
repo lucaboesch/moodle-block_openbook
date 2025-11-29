@@ -76,7 +76,6 @@ class main implements renderable, templatable {
 
         $data = new stdClass();
         $data->openbooklink = get_string('accessgranted', 'block_openbook', $a);
-        $data->ownfilestitle = get_string('myfiles', 'mod_openbook');
 
         // Teacher files.
 
@@ -150,7 +149,165 @@ class main implements renderable, templatable {
 
         // Shared files.
 
-        $data->sharedfilestitle = get_string('publicfiles', 'mod_openbook');
+        $obtainteacherapproval = $openbook->obtainteacherapproval;
+        $andteacherapproval = "";
+        $obtainstudentapproval = $openbook->obtainstudentapproval;
+        $andstudentapproval = "";
+
+        $sharedfiles = [];
+
+        if ($obtainteacherapproval) {
+            $andteacherapproval = " AND of.teacherapproval = 1";
+        }
+        if ($obtainstudentapproval) {
+            $andstudentapproval = " AND of.studentapproval = 1";
+        }
+
+        $sql = "SELECT f.*, of.*
+          FROM {files} f
+          JOIN {openbook_file} of ON of.fileid = f.id
+          JOIN {context} c ON c.id = f.contextid AND c.contextlevel = :contextlevel
+          JOIN {course_modules} cm ON cm.id = c.instanceid
+         WHERE f.component = 'mod_openbook'
+           AND f.filearea = 'attachment'
+           AND f.filename <> '.'
+           AND cm.instance = :openbookid" . $andteacherapproval . $andstudentapproval . "
+           AND cm.module = (SELECT id FROM {modules} WHERE name = 'openbook')
+      ORDER BY f.filepath, f.filename";
+
+        $params = ['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE];
+
+        $records = $DB->get_records_sql($sql, $params);
+        foreach ($records as $f) {
+            if ($openpdffilesinpdfjs && $f->mimetype === 'application/pdf') {
+                if ($uselegacyviewer) {
+                    $pdfviewer = 'pdfjs-5.4.394-legacy-dist';
+                } else {
+                    $pdfviewer = 'pdfjs-5.4.394-dist';
+                }
+
+                $pluginfilerawurl = \moodle_url::make_pluginfile_url(
+                    $f->contextid,
+                    'mod_openbook',
+                    'attachment',
+                    $f->itemid,
+                    '/',
+                    $f->filename,
+                    true
+                );
+
+                $pdfjsurl = new \moodle_url('/mod/openbook/' . $pdfviewer . '/web/viewer.html', [
+                    'file' => $pluginfilerawurl->out(false),
+                ]);
+                $sharedfiles[] = (object) [
+                    'filename' => $f->filename,
+                    'filepath' => $f->filepath,
+                    'url' => $pdfjsurl,
+                ];
+            } else {
+                $url =
+                    \moodle_url::make_pluginfile_url(
+                        $f->contextid,
+                        $f->component,
+                        $f->filearea,
+                        $f->itemid,
+                        $f->filepath,
+                        $f->filename,
+                        false,
+                    );
+                $sharedfiles[] = (object) [
+                    'filename' => format_string($f->filename),
+                    'filepath' => $f->filepath,
+                    'url' => $url->out(false),
+                ];
+            }
+        }
+        $sharedfilelinks = [];
+        foreach ($sharedfiles as $f) {
+            $sharedfilelinks[] = \html_writer::link($f->url, $f->filename, ['target' => '_blank']);
+        }
+
+        if (!empty($sharedfiles)) {
+            $data->sharedfilestitle = get_string('publicfiles', 'mod_openbook');
+            $data->sharedfiles = implode('<br/>', $sharedfilelinks);
+        }
+
+        // Own files.
+
+        $ownfiles = [];
+
+        if ($obtainteacherapproval) {
+            $andteacherapproval = " AND of.teacherapproval = 1";
+        }
+
+        $sql = "SELECT f.*, of.*
+          FROM {files} f
+          JOIN {openbook_file} of ON of.fileid = f.id
+          JOIN {context} c ON c.id = f.contextid AND c.contextlevel = :contextlevel
+          JOIN {course_modules} cm ON cm.id = c.instanceid
+         WHERE f.component = 'mod_openbook'
+           AND f.filearea = 'attachment'
+           AND f.filename <> '.'
+           AND cm.instance = :openbookid" . $andteacherapproval . "
+           AND cm.module = (SELECT id FROM {modules} WHERE name = 'openbook')
+      ORDER BY f.filepath, f.filename";
+
+        $params = ['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE];
+
+        $records = $DB->get_records_sql($sql, $params);
+        foreach ($records as $f) {
+            if ($openpdffilesinpdfjs && $f->mimetype === 'application/pdf') {
+                if ($uselegacyviewer) {
+                    $pdfviewer = 'pdfjs-5.4.394-legacy-dist';
+                } else {
+                    $pdfviewer = 'pdfjs-5.4.394-dist';
+                }
+
+                $pluginfilerawurl = \moodle_url::make_pluginfile_url(
+                    $f->contextid,
+                    'mod_openbook',
+                    'attachment',
+                    $f->itemid,
+                    '/',
+                    $f->filename,
+                    true
+                );
+
+                $pdfjsurl = new \moodle_url('/mod/openbook/' . $pdfviewer . '/web/viewer.html', [
+                    'file' => $pluginfilerawurl->out(false),
+                ]);
+                $ownfiles[] = (object) [
+                    'filename' => $f->filename,
+                    'filepath' => $f->filepath,
+                    'url' => $pdfjsurl,
+                ];
+            } else {
+                $url =
+                    \moodle_url::make_pluginfile_url(
+                        $f->contextid,
+                        $f->component,
+                        $f->filearea,
+                        $f->itemid,
+                        $f->filepath,
+                        $f->filename,
+                        false,
+                    );
+                $ownfiles[] = (object) [
+                    'filename' => format_string($f->filename),
+                    'filepath' => $f->filepath,
+                    'url' => $url->out(false),
+                ];
+            }
+        }
+        $ownfilelinks = [];
+        foreach ($ownfiles as $f) {
+            $ownfilelinks[] = \html_writer::link($f->url, $f->filename, ['target' => '_blank']);
+        }
+
+        if (!empty($ownfiles)) {
+            $data->ownfilestitle = get_string('myfiles', 'mod_openbook');
+            $data->ownfiles = implode('<br/>', $ownfilelinks);
+        }
         return $data;
     }
 }
