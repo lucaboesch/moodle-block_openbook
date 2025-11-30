@@ -1,5 +1,8 @@
 @block @block_openbook
 Feature: Tests for shared files in Openbook resource folder
+  In order to use Openbook resource folder files in a quiz, uploaded by myself
+  As a user
+  I need to see my own files
 
   Background:
     Given the following "users" exist:
