@@ -64,7 +64,7 @@ class main implements renderable, templatable {
      *
      */
     public function export_for_template(renderer_base $output) {
-        global $DB;
+        global $DB, $USER;
         $openbook = $DB->get_record('openbook', ['id' => $this->openbookid], '*', IGNORE_MISSING);
         $openpdffilesinpdfjs = $openbook->openpdffilesinpdfjs;
         $uselegacyviewer = $openbook->uselegacyviewer;
@@ -248,11 +248,12 @@ class main implements renderable, templatable {
          WHERE f.component = 'mod_openbook'
            AND f.filearea = 'attachment'
            AND f.filename <> '.'
+           AND f.itemid = :userid
            AND cm.instance = :openbookid" . $andteacherapproval . "
            AND cm.module = (SELECT id FROM {modules} WHERE name = 'openbook')
       ORDER BY f.filepath, f.filename";
 
-        $params = ['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE];
+        $params = ['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE, 'userid' => $USER->id];
 
         $records = $DB->get_records_sql($sql, $params);
         foreach ($records as $f) {
