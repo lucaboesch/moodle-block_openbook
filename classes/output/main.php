@@ -77,9 +77,48 @@ class main implements renderable, templatable {
         $data = new stdClass();
         $data->openbooklink = get_string('accessgranted', 'block_openbook', $a);
 
+        // Group handling: if activity is groupwise (separate groups), restrict files to user's group.
+        $openbookcm = get_coursemodule_from_instance(
+            'openbook',
+            $this->openbookid,
+            0,
+            false,
+            MUST_EXIST
+        );
+        $groupwiseactivity = groups_get_activity_group($openbookcm);
+        $grouprestricted = !empty($groupwiseactivity);
+
         // Teacher files.
 
         $teacherfiles = [];
+
+        // Determine whether current user can view all groups.
+        $cmcontext = \context_module::instance($openbookcm->id);
+        $canviewallgroups = has_capability('moodle/site:accessallgroups', $cmcontext);
+
+        // Prepare possible IN-clause for members of the same group(s).
+        $andgroupmembers = '';
+        $groupparams = [];
+
+        if ($grouprestricted && !$canviewallgroups) {
+            $allmembers = [];
+            // All other group member's user ids that are in the same group(s) as the current user in this course.
+            $currentusergroups = groups_get_user_groups($openbookcm->course, $USER->id);
+            foreach ($currentusergroups as $coursegroup) {
+                foreach ($coursegroup as $groupid) {
+                    $groupusers = groups_get_members($groupid, 'u.id');
+                    if (!empty($groupusers)) {
+                        $allmembers = array_merge($allmembers, $groupusers);
+                    }
+                }
+            }
+
+            if (!empty($allmembers)) {
+                [$insql, $insqlparams] = $DB->get_in_or_equal(array_column($allmembers, 'id'), SQL_PARAMS_NAMED, 'user');
+                $andgroupmembers = " AND f.itemid " . $insql;
+                $groupparams = $insqlparams;
+            }
+        }
 
         $sql = "SELECT f.*
                   FROM {files} f
@@ -89,9 +128,10 @@ class main implements renderable, templatable {
                    AND f.filearea = 'commonteacherfiles'
                    AND f.filename <> '.'
                    AND cm.instance = :openbookid
-                   AND cm.module = (SELECT id FROM {modules} WHERE name = 'openbook')
+                   AND cm.module = (SELECT id FROM {modules} WHERE name = 'openbook')" .
+                       $andgroupmembers . "
               ORDER BY f.filepath, f.filename";
-        $params = ['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE];
+        $params = array_merge(['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE], $groupparams);
 
         $records = $DB->get_records_sql($sql, $params);
         foreach ($records as $f) {
@@ -172,10 +212,11 @@ class main implements renderable, templatable {
            AND f.filearea = 'attachment'
            AND f.filename <> '.'
            AND cm.instance = :openbookid" . $andteacherapproval . $andstudentapproval . "
-           AND cm.module = (SELECT id FROM {modules} WHERE name = 'openbook')
+           AND cm.module = (SELECT id FROM {modules} WHERE name = 'openbook')" .
+               $andgroupmembers . "
       ORDER BY f.filepath, f.filename";
 
-        $params = ['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE];
+        $params = array_merge(['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE], $groupparams);
 
         $records = $DB->get_records_sql($sql, $params);
         foreach ($records as $f) {
@@ -250,10 +291,14 @@ class main implements renderable, templatable {
            AND f.filename <> '.'
            AND f.itemid = :userid
            AND cm.instance = :openbookid" . $andteacherapproval . "
-           AND cm.module = (SELECT id FROM {modules} WHERE name = 'openbook')
+           AND cm.module = (SELECT id FROM {modules} WHERE name = 'openbook')" .
+               $andgroupmembers . "
       ORDER BY f.filepath, f.filename";
 
-        $params = ['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE, 'userid' => $USER->id];
+        $params = array_merge(
+            ['openbookid' => $this->openbookid, 'contextlevel' => CONTEXT_MODULE, 'userid' => $USER->id],
+            $groupparams,
+        );
 
         $records = $DB->get_records_sql($sql, $params);
         foreach ($records as $f) {

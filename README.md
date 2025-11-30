@@ -35,7 +35,9 @@ See http://docs.moodle.org/en/Installing_plugins for details on installing Moodl
 Usage & Settings
 ----------------
 
-After installing the plugin, it can be directly used by teachers.
+After installing the plugin, it can be directly used by teachers. When a block is added, you are
+prompted to select which Openbook resource folder from the current course you want the files from.
+For more details, refer to "Block placement" section below.
 
 Capabilities
 ------------
@@ -58,7 +60,7 @@ Block placement
 
 block_openbook can only be added to quiz activity pages. In a quiz with editing mode enabled,
 teachers can add the block via 'Add a block' in the block drawer. Make sure the quiz has the
-setting "Show blocks during quiz attempts" and the "Where this block appears"
+setting "Show blocks during quiz attempts" set to "Yes", and the "Where this block appears"
 setting in the block configuration is set to "Any quiz module pages" or at least
 "Attempt quiz page", otherwise students won't see the block in a quiz.
 

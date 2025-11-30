@@ -1,5 +1,8 @@
 @block @block_openbook
 Feature: Basic tests for Openbook resource folder files
+  In order to use Openbook resource folder files in a quiz
+  As a user
+  I need to configure an Openbook resource folder block and see it in a quiz
 
   Background:
     Given the following "users" exist:
