@@ -9,7 +9,8 @@ Feature: Tests for own files in Openbook resource folder
       | username | firstname | lastname | email            |
       | teacher1 | Teacher   | 1        | teacher1@asd.com |
       | student1 | Student   | 1        | student1@asd.com |
-      | student2 | Student   | 1        | student1@asd.com |
+      | student2 | Student   | 1        | student2@asd.com |
+      | student3 | Student   | 1        | student3@asd.com |
     And the following "courses" exist:
       | fullname | shortname | category | startdate     |
       | Course 1 | C1        | 0        | ##yesterday## |
@@ -18,6 +19,7 @@ Feature: Tests for own files in Openbook resource folder
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
       | student2 | C1     | student        |
+      | student3 | C1     | student        |
     And the following "activities" exist:
       | activity | course | name                       | maxbytes | filesarepersonal | obtainteacherapproval | obtainstudentapproval |
       | openbook | C1     | Openbook resource folder 1 | 8388608  | 0                | 1                     | 0                     |
@@ -89,3 +91,51 @@ Feature: Tests for own files in Openbook resource folder
     And I press "Attempt quiz"
     Then "Openbook resource folder files" "block" should exist
     And I should see "Own files"
+
+  @javascript @_file_upload
+  Scenario: Upload a shared file as student in an openbook instance later on, the teacher disallows file sharing
+    When I am on the "Course 1" course page logged in as teacher1
+    And I am on "Course 1" course homepage with editing mode on
+    And I am on the "Quiz 1" "mod_quiz > View" page
+    And the add block selector should contain "Openbook resource folder files..." block
+    And the following "blocks" exist:
+      | blockname | contextlevel    | reference | pagetypepattern | defaultregion | title                          | openbook                   |
+      | openbook  | Activity module | q1        | mod-quiz-*      | side-pre      | Openbook resource folder files | Openbook resource folder 1 |
+    And I am on the "Quiz 1" "mod_quiz > View" page
+    And I configure the "Openbook resource folder files" block
+    And I set the field "Take files from this Openbook resource folder" to "Openbook resource folder 1"
+    And I press "Save changes"
+    And I should see "Openbook resource folder files"
+    And I should see "Openbook resource folder 1"
+    And I am on the "Openbook resource folder 1" "openbook activity" page logged in as student1
+    And I should see "Own files"
+    And I press "Edit/upload files"
+    And I should see "Own files"
+    And I upload "blocks/openbook/tests/fixtures/student_file_shared.pdf" file to "Own files" filemanager
+    And I press "Save changes"
+    And I should see "student_file_shared.pdf"
+    And I log out
+    And I am on the "Openbook resource folder 1" "openbook activity editing" page logged in as teacher1
+    And I navigate to "File submissions" in current page administration
+    And I set the field "filter" to "All file submissions"
+    And I set the field with xpath "//select[contains(@name,'files')]" to "Approve"
+    And I press "Save changes"
+    And I log out
+    When I am on the "Quiz 1" "quiz activity" page logged in as student2
+    And I press "Attempt quiz"
+    Then "Openbook resource folder files" "block" should exist
+    And I should see "Access is granted to the Openbook resource folder 1 Openbook resource folder containing these files:"
+    And I should see "Shared files"
+    And I should see "student_file_shared.pdf"
+    And I should not see "Own files"
+    And I am on the "Openbook resource folder 1" "openbook activity editing" page logged in as teacher1
+    And I set the following fields to these values:
+      | Files are personal | Yes (files are personal) |
+    And I press "Save and display"
+    And I am on the "Quiz 1" "quiz activity" page logged in as student3
+    And I press "Attempt quiz"
+    Then "Openbook resource folder files" "block" should exist
+    And I should see "Access is granted to the Openbook resource folder 1 Openbook resource folder containing these files:"
+    And I should not see "Shared files"
+    And I should not see "student_file_shared.pdf"
+    And I should not see "Own files"
