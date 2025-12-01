@@ -45,6 +45,8 @@ class main implements renderable, templatable {
      *
      * @param int $openbookid the openbook resource folder id.
      * @param stdClass $openbookcm the openbook course module.
+     * @param stdClass $quiz the quiz the block is displayed in.
+     * @param string $pagetypepattern the block pagetypepattern.
      * @throws \dml_exception
      */
     public function __construct(
@@ -52,13 +54,17 @@ class main implements renderable, templatable {
         protected int $openbookid,
         /** @var stdClass $openbookcm the openbook course module. */
         protected stdClass $openbookcm,
+        /** @var stdClass $quiz the quiz the block is displayed in. */
+        protected stdClass $quiz,
+        /** @var string $pagetypepattern the block pagetypepattern. */
+        protected string $pagetypepattern,
     ) {
     }
 
     /**
      * Export this data so it can be used as the context for a mustache template.
      *
-     * @param \renderer_base $output
+     * @param renderer_base $output
      * @return array Context variables for the template
      * @throws \coding_exception
      *
@@ -358,6 +364,34 @@ class main implements renderable, templatable {
             $data->ownfilestitle = get_string('myfiles', 'mod_openbook');
             $data->ownfiles = implode('<br/>', $ownfilelinks);
         }
+
+        if (
+            has_capability('mod/quiz:manage', $cmcontext->get_course_context()) &&
+            has_capability('block/openbook:addinstance', $cmcontext->get_course_context())
+        ) {
+            $notvisiblewarning = '';
+            if ($this->pagetypepattern !== 'mod-quiz-*' && $this->pagetypepattern !== 'mod-quiz-attempt') {
+                $a = new stdClass();
+                $a->display = get_string('createdat', 'block');
+                $a->where = get_string('wherethisblockappears', 'block');
+                $a->anypage = get_string('page-mod-quiz-x', 'mod_quiz');
+                $a->attemptpage = get_string('page-mod-quiz-attempt', 'mod_quiz');
+                $notvisiblewarning .= '<br>' . get_string('set_pagetypepattern', 'block_openbook', $a);
+            }
+            $quiz = $DB->get_record('quiz', ['id' => $this->quiz->instance], '*', MUST_EXIST);
+            if ($quiz->showblocks == 0) {
+                $a = new stdClass();
+                $a->showblocks = get_string('showblocks', 'mod_quiz');
+                $a->appearance = get_string('appearance');
+                $a->yes = get_string('yes');
+                $notvisiblewarning .= '<br>' . get_string('set_showblocks', 'block_openbook', $a);
+            }
+            if ($notvisiblewarning !== '') {
+                $data->notvisiblewarning = '<div class="box py-3 mt-4 generalbox alert alert-info">' .
+                    get_string('blocknotshown', 'block_openbook') . ' ' . $notvisiblewarning . '</div>';
+            }
+        }
+
         return $data;
     }
 }

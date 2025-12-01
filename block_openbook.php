@@ -189,7 +189,12 @@ class block_openbook extends block_base {
         }
 
         if (isset($this->config->openbook)) {
-            $renderable = new \block_openbook\output\main($this->config->openbook, $this->get_openbook_cm());
+            $renderable = new \block_openbook\output\main(
+                $this->config->openbook,
+                $this->get_openbook_cm(),
+                $this->get_owning_activity(),
+                $this->instance->pagetypepattern,
+            );
             $renderer = $this->page->get_renderer('block_openbook');
 
             $this->content = new stdClass();
