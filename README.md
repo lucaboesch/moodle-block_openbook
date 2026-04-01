@@ -3,7 +3,7 @@ Openbook Resource Block
 [![Moodle Plugin CI](https://github.com/lucaboesch/moodle-block_openbook/actions/workflows/moodle-plugin-ci.yml/badge.svg?branch=main)](https://github.com/lucaboesch/moodle-block_openbook/actions/workflows/moodle-plugin-ci.yml)
 [![Latest Release](https://img.shields.io/github/v/release/lucaboesch/moodle-block_openbook?sort=semver&color=orange)](https://github.com/lucaboesch/moodle-block_openbook/releases)
 [![PHP Support](https://img.shields.io/badge/php-8.1--8.4-blue)](https://github.com/lucaboesch/moodle-block_openbook/actions)
-[![Moodle Support](https://img.shields.io/badge/Moodle-4.5--5.1+-orange)](https://github.com/lucaboesch/moodle-block_openbook/actions)
+[![Moodle Support](https://img.shields.io/badge/Moodle-4.5--5.2+-orange)](https://github.com/lucaboesch/moodle-block_openbook/actions)
 [![License GPL-3.0](https://img.shields.io/github/license/lucaboesch/moodle-block_openbook?color=lightgrey)](https://github.com/lucaboesch/moodle-block_openbook/blob/main/LICENSE)
 [![GitHub contributors](https://img.shields.io/github/contributors/lucaboesch/moodle-block_openbook)](https://github.com/lucaboesch/moodle-block_openbook/graphs/contributors)
 
