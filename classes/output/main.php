@@ -118,10 +118,11 @@ class main implements renderable, templatable {
                     }
                 }
             }
+            var_dump($allmembers);
 
             if (!empty($allmembers)) {
                 [$insql, $insqlparams] = $DB->get_in_or_equal(array_column($allmembers, 'id'), SQL_PARAMS_NAMED, 'user');
-                $andgroupmembers = " AND f.itemid " . $insql;
+                $andgroupmembers = " AND f.userid " . $insql;
                 $groupparams = $insqlparams;
             }
         }

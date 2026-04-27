@@ -46,8 +46,8 @@ Feature: Tests for shared files in Openbook resource folder
     When I am on the "Openbook resource folder 1" "openbook activity" page logged in as teacher1
     And I should see "Own files"
     And I follow "Edit/upload teacher files"
-    And I should see "Teacher files that are visible to everybody"
-    And I upload "blocks/openbook/tests/fixtures/teacher_file_1.pdf" file to "Teacher files that are visible to everybody" filemanager
+    And I should see "Teacher files"
+    And I upload "blocks/openbook/tests/fixtures/teacher_file_1.pdf" file to "Teacher files" filemanager
     And I press "Save changes"
     And I should see "teacher_file_1.pdf"
     And I am on the "Openbook resource folder 1" "openbook activity editing" page logged in as teacher1
@@ -87,8 +87,8 @@ Feature: Tests for shared files in Openbook resource folder
     When I am on the "Openbook resource folder 1" "openbook activity" page logged in as teacher1
     And I should see "Own files"
     And I follow "Edit/upload teacher files"
-    And I should see "Teacher files that are visible to everybody"
-    And I upload "blocks/openbook/tests/fixtures/teacher_file_1.pdf" file to "Teacher files that are visible to everybody" filemanager
+    And I should see "Teacher files"
+    And I upload "blocks/openbook/tests/fixtures/teacher_file_1.pdf" file to "Teacher files" filemanager
     And I press "Save changes"
     And I should see "teacher_file_1.pdf"
     And I am on "Course 1" course homepage with editing mode on

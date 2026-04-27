@@ -48,8 +48,8 @@ Feature: Tests for own files in Openbook resource folder
     When I am on the "Openbook resource folder 1" "openbook activity" page logged in as teacher1
     And I should see "Own files"
     And I follow "Edit/upload teacher files"
-    And I should see "Teacher files that are visible to everybody"
-    And I upload "blocks/openbook/tests/fixtures/teacher_file_1.pdf" file to "Teacher files that are visible to everybody" filemanager
+    And I should see "Teacher files"
+    And I upload "blocks/openbook/tests/fixtures/teacher_file_1.pdf" file to "Teacher files" filemanager
     And I press "Save changes"
     And I should see "teacher_file_1.pdf"
     And I am on "Course 1" course homepage with editing mode on
@@ -68,9 +68,9 @@ Feature: Tests for own files in Openbook resource folder
     And I should see "Own files"
     And I press "Edit/upload files"
     And I should see "Own files"
-    And I upload "blocks/openbook/tests/fixtures/student_file_shared.pdf" file to "Own files" filemanager
+    And I upload "blocks/openbook/tests/fixtures/student_file_1_shared.pdf" file to "Own files" filemanager
     And I press "Save changes"
-    And I should see "student_file_shared.pdf"
+    And I should see "student_file_1_shared.pdf"
     And I log out
     And I am on the "Openbook resource folder 1" "openbook activity editing" page logged in as teacher1
     And I navigate to "File submissions" in current page administration
@@ -85,7 +85,7 @@ Feature: Tests for own files in Openbook resource folder
     And I should see "Teacher files"
     And I should see "teacher_file_1.pdf"
     And I should see "Shared files"
-    And I should see "student_file_shared.pdf"
+    And I should see "student_file_1_shared.pdf"
     And I should not see "Own files"
     And I am on the "Quiz 1" "quiz activity" page logged in as student1
     And I press "Attempt quiz"
@@ -111,9 +111,9 @@ Feature: Tests for own files in Openbook resource folder
     And I should see "Own files"
     And I press "Edit/upload files"
     And I should see "Own files"
-    And I upload "blocks/openbook/tests/fixtures/student_file_shared.pdf" file to "Own files" filemanager
+    And I upload "blocks/openbook/tests/fixtures/student_file_1_shared.pdf" file to "Own files" filemanager
     And I press "Save changes"
-    And I should see "student_file_shared.pdf"
+    And I should see "student_file_1_shared.pdf"
     And I log out
     And I am on the "Openbook resource folder 1" "openbook activity editing" page logged in as teacher1
     And I navigate to "File submissions" in current page administration
@@ -126,7 +126,7 @@ Feature: Tests for own files in Openbook resource folder
     Then "Openbook resource folder files" "block" should exist
     And I should see "Access is granted to the Openbook resource folder 1 Openbook resource folder containing these files:"
     And I should see "Shared files"
-    And I should see "student_file_shared.pdf"
+    And I should see "student_file_1_shared.pdf"
     And I should not see "Own files"
     And I am on the "Openbook resource folder 1" "openbook activity editing" page logged in as teacher1
     And I set the following fields to these values:
@@ -137,5 +137,5 @@ Feature: Tests for own files in Openbook resource folder
     Then "Openbook resource folder files" "block" should exist
     And I should see "Access is granted to the Openbook resource folder 1 Openbook resource folder containing these files:"
     And I should not see "Shared files"
-    And I should not see "student_file_shared.pdf"
+    And I should not see "student_file_1_shared.pdf"
     And I should not see "Own files"

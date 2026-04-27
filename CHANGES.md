@@ -4,6 +4,10 @@ moodle-block_openbook
 Changes
 -------
 
+### v5.2-r3
+
+* 2026-04-28 - Fixed handling for groups.
+
 ### v5.2-r2
 
 * 2026-04-27 - Adapted paths to not include PDF.js version number as in the activity.
