@@ -143,9 +143,9 @@ class main implements renderable, templatable {
         foreach ($records as $f) {
             if ($openpdffilesinpdfjs && $f->mimetype === 'application/pdf') {
                 if ($uselegacyviewer) {
-                    $pdfviewer = 'pdfjs-5.4.394-legacy-dist';
+                    $pdfviewer = 'pdfjs-legacy-dist';
                 } else {
-                    $pdfviewer = 'pdfjs-5.4.394-dist';
+                    $pdfviewer = 'pdfjs-dist';
                 }
 
                 $pluginfilerawurl = \moodle_url::make_pluginfile_url(
@@ -231,9 +231,9 @@ class main implements renderable, templatable {
             foreach ($records as $f) {
                 if ($openpdffilesinpdfjs && $f->mimetype === 'application/pdf') {
                     if ($uselegacyviewer) {
-                        $pdfviewer = 'pdfjs-5.4.394-legacy-dist';
+                        $pdfviewer = 'pdfjs-legacy-dist';
                     } else {
-                        $pdfviewer = 'pdfjs-5.4.394-dist';
+                        $pdfviewer = 'pdfjs-dist';
                     }
 
                     $pluginfilerawurl = \moodle_url::make_pluginfile_url(
@@ -314,9 +314,9 @@ class main implements renderable, templatable {
         foreach ($records as $f) {
             if ($openpdffilesinpdfjs && $f->mimetype === 'application/pdf') {
                 if ($uselegacyviewer) {
-                    $pdfviewer = 'pdfjs-5.4.394-legacy-dist';
+                    $pdfviewer = 'pdfjs-legacy-dist';
                 } else {
-                    $pdfviewer = 'pdfjs-5.4.394-dist';
+                    $pdfviewer = 'pdfjs-dist';
                 }
 
                 $pluginfilerawurl = \moodle_url::make_pluginfile_url(
