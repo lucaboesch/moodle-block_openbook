@@ -176,7 +176,6 @@ class block_openbook extends block_base {
      * @return stdClass contents of block
      */
     public function get_content() {
-        global $DB;
         if (isset($this->content)) {
             return $this->content;
         }
