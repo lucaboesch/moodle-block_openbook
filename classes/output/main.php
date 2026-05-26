@@ -28,6 +28,7 @@ use renderable;
 use renderer_base;
 use templatable;
 use stdClass;
+use cm_info;
 
 /**
  * Class containing data for openbook block.
@@ -43,7 +44,7 @@ class main implements renderable, templatable {
      * Initialize the user preferences
      *
      * @param int $openbookid the openbook resource folder id.
-     * @param stdClass $openbookcm the openbook course module.
+     * @param cm_info|stdClass $openbookcm the openbook course module.
      * @param stdClass $quiz the quiz the block is displayed in.
      * @param string $pagetypepattern the block pagetypepattern.
      * @throws \dml_exception
@@ -51,8 +52,8 @@ class main implements renderable, templatable {
     public function __construct(
         /** @var int $openbookid the openbook resource folder id. */
         protected int $openbookid,
-        /** @var stdClass $openbookcm the openbook course module. */
-        protected stdClass $openbookcm,
+        /** @var cm_info|stdClass $openbookcm the openbook course module. */
+        protected cm_info|stdClass $openbookcm,
         /** @var stdClass $quiz the quiz the block is displayed in. */
         protected stdClass $quiz,
         /** @var string $pagetypepattern the block pagetypepattern. */

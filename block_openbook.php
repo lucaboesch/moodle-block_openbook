@@ -187,7 +187,8 @@ class block_openbook extends block_base {
             return $this->content;
         }
 
-        if (isset($this->config->openbook)) {
+        $openbookcm = $this->get_openbook_cm();
+        if (isset($this->config->openbook) && $openbookcm !== null) {
             $renderable = new \block_openbook\output\main(
                 $this->config->openbook,
                 $this->get_openbook_cm(),
