@@ -24,7 +24,6 @@
 
 namespace block_openbook\output;
 
-use core_competency\url;
 use renderable;
 use renderer_base;
 use templatable;
@@ -118,7 +117,6 @@ class main implements renderable, templatable {
                     }
                 }
             }
-            var_dump($allmembers);
 
             if (!empty($allmembers)) {
                 [$insql, $insqlparams] = $DB->get_in_or_equal(array_column($allmembers, 'id'), SQL_PARAMS_NAMED, 'user');
@@ -163,7 +161,7 @@ class main implements renderable, templatable {
                     'file' => $pluginfilerawurl->out(false),
                 ]);
                 $teacherfiles[] = (object) [
-                    'filename' => $f->filename,
+                    'filename' => format_string($f->filename),
                     'filepath' => $f->filepath,
                     'url' => $pdfjsurl,
                 ];
@@ -251,7 +249,7 @@ class main implements renderable, templatable {
                         'file' => $pluginfilerawurl->out(false),
                     ]);
                     $sharedfiles[] = (object) [
-                        'filename' => $f->filename,
+                        'filename' => format_string($f->filename),
                         'filepath' => $f->filepath,
                         'url' => $pdfjsurl,
                     ];
@@ -334,7 +332,7 @@ class main implements renderable, templatable {
                     'file' => $pluginfilerawurl->out(false),
                 ]);
                 $ownfiles[] = (object) [
-                    'filename' => $f->filename,
+                    'filename' => format_string($f->filename),
                     'filepath' => $f->filepath,
                     'url' => $pdfjsurl,
                 ];
