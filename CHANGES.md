@@ -4,6 +4,10 @@ moodle-block_openbook
 Changes
 -------
 
+### v5.2-r4
+
+* 2026-05-26 - Several code improvements after MDL Shield check.
+
 ### v5.2-r3
 
 * 2026-04-28 - Fixed handling for groups.
