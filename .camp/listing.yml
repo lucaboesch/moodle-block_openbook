@@ -1,0 +1,30 @@
+name: block_openbook
+summary: The Openbook Resource Block provides links to files provided by a Openbook Resource Folder (mod_openbook).
+description: |
+  The **Openbook resource folder files block** (`block_openbook`) is a Moodle block designed to support 
+  **open-book quizzes and examinations**. It displays direct links to files stored in an 
+  **Openbook resource folder** (`mod_openbook`) and makes them available directly within quiz pages.
+
+  ## Features
+  - Displays files from a selected Openbook resource folder.
+  - Can be added only to quiz activities.
+  - Allows students to access permitted reference materials during a quiz attempt without leaving the quiz page.
+  - Provides links both to individual files and to the complete Openbook resource folder.
+  - Supports efficient use of approved documents in open-book assessments.
+
+  ## Typical Use Case
+  Teachers create an Openbook resource folder containing documents that students may consult during an examination.
+  By adding the Openbook resource folder files block to a quiz and enabling blocks during quiz attempts, students
+  can access these approved materials directly from the quiz interface.
+
+  ## Relationship to mod_openbook
+  The block is a companion plugin to the **Openbook resource folder activity** (`mod_openbook`). While the activity
+  manages the collection, approval, sharing, and secure access of documents, the block focuses on convenient access
+  to those documents during quiz attempts.
+labels:
+  - fully-free
+# screenshots:
+#   - path: .camp/screenshots/overview.png
+#     caption: Main view
+links:
+  issues: https://github.com/lucaboesch/moodle-block_openbook/issues
