@@ -4,6 +4,10 @@ moodle-block_openbook
 Changes
 -------
 
+### v5.2-r5
+
+* 2026-05-29 - CAMP related changes.
+
 ### v5.2-r4
 
 * 2026-05-26 - Several code improvements after MDL Shield check.

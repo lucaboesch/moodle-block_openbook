@@ -26,8 +26,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_openbook';
-$plugin->release = 'v5.2-r4';
-$plugin->version = 2026052600;
+$plugin->release = 'v5.2-r5';
+$plugin->version = 2026052900;
 $plugin->requires = 2024100700;
 $plugin->supported = [405, 502];
 $plugin->maturity = MATURITY_STABLE;
