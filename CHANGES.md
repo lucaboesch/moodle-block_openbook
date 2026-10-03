@@ -4,6 +4,10 @@ moodle-block_openbook
 Changes
 -------
 
+### v5.3-r2
+
+* 2026-10-03 - Fixed: remap the referenced openbook activity when a course is backed up/restored or imported.
+
 ### v5.2-r1
 
 * 2026-10-03 - Moodle 5.3 compatibility.
