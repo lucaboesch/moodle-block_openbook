@@ -4,6 +4,10 @@ moodle-block_openbook
 Changes
 -------
 
+### v5.2-r1
+
+* 2026-10-03 - Moodle 5.3 compatibility.
+
 ### v5.2-r5
 
 * 2026-05-29 - CAMP related changes.

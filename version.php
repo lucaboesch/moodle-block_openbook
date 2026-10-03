@@ -26,9 +26,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_openbook';
-$plugin->release = 'v5.2-r5';
-$plugin->version = 2026052900;
+$plugin->release = 'v5.3-r1';
+$plugin->version = 2026100300;
 $plugin->requires = 2024100700;
-$plugin->supported = [405, 502];
+$plugin->supported = [405, 503];
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = ['mod_openbook' => 2026040100]; // Must have openbook activity module installed.
