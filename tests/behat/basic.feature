@@ -67,3 +67,19 @@ Feature: Basic tests for Openbook resource folder files
     And I press "Attempt quiz"
     Then "Openbook resource folder files" "block" should exist
     And I should see "Access is granted to the Openbook resource folder 1 Openbook resource folder containing these files:"
+
+  Scenario: The Openbook resource folder name can be shown without a link to the activity
+    Given the following "blocks" exist:
+      | blockname | contextlevel    | reference | pagetypepattern | defaultregion | title                          | openbook                   |
+      | openbook  | Activity module | q1        | mod-quiz-*      | side-pre      | Openbook resource folder files | Openbook resource folder 1 |
+    And I am on the "Quiz 1" "mod_quiz > View" page logged in as teacher1
+    And I turn editing mode on
+    When I configure the "Openbook resource folder files" block
+    And I set the field "Take files from this Openbook resource folder" to "Openbook resource folder 1"
+    And I press "Save changes"
+    And "Openbook resource folder 1" "link" should exist in the "Openbook resource folder files" "block"
+    And I configure the "Openbook resource folder files" block
+    And I set the field "Link in introduction" to "Show no link"
+    And I press "Save changes"
+    Then I should see "Openbook resource folder 1" in the "Openbook resource folder files" "block"
+    But "Openbook resource folder 1" "link" should not exist in the "Openbook resource folder files" "block"
