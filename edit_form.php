@@ -46,6 +46,11 @@ class block_openbook_edit_form extends block_edit_form {
             $openbooks[$key] = strip_tags(format_string($value, true));
         }
         $mform->addElement('select', 'config_openbook', get_string('select_openbook', 'block_openbook'), $openbooks);
+
+        // Option to show the Openbook resource folder name without a link to the activity.
+        $mform->addElement('advcheckbox', 'config_disableopenbooklink', get_string('disableopenbooklink', 'block_openbook'));
+        $mform->addHelpButton('config_disableopenbooklink', 'disableopenbooklink', 'block_openbook');
+        $mform->setDefault('config_disableopenbooklink', 0);
     }
 
     /**
