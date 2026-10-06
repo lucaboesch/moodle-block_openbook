@@ -39,6 +39,10 @@ After installing the plugin, it can be directly used by teachers. When a block i
 prompted to select which Openbook resource folder from the current course you want the files from.
 For more details, refer to "Block placement" section below.
 
+By default, the block links the name of the selected Openbook resource folder to the activity.
+Enable "Show Openbook resource folder name without link" in the block configuration to show
+the name as plain text instead.
+
 Capabilities
 ------------
 

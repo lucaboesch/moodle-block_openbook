@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['accessgranted'] = 'Access is granted to the {$a} Openbook resource folder containing these files:';
 $string['blocknotshown'] = 'This block is not shown to students during a quiz attempt:';
+$string['disableopenbooklink'] = 'Show Openbook resource folder name without link';
+$string['disableopenbooklink_help'] = 'If enabled, the name of the linked Openbook resource folder is shown as plain text in the block instead of a link to the activity.';
 $string['openbook:addinstance'] = 'Add a new Openbook resource folder files block';
 $string['pluginname'] = 'Openbook resource folder files';
 $string['privacy:metadata'] = "The Openbook resource folder files plugin doesn't store any personal data.";

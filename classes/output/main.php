@@ -47,6 +47,7 @@ class main implements renderable, templatable {
      * @param cm_info|stdClass $openbookcm the openbook course module.
      * @param stdClass $quiz the quiz the block is displayed in.
      * @param string $pagetypepattern the block pagetypepattern.
+     * @param bool $disableopenbooklink whether to show the openbook name without a link to the activity.
      * @throws \dml_exception
      */
     public function __construct(
@@ -58,6 +59,8 @@ class main implements renderable, templatable {
         protected stdClass $quiz,
         /** @var string $pagetypepattern the block pagetypepattern. */
         protected string $pagetypepattern,
+        /** @var bool $disableopenbooklink whether to show the openbook name without a link to the activity. */
+        protected bool $disableopenbooklink = false,
     ) {
     }
 
@@ -75,10 +78,14 @@ class main implements renderable, templatable {
         $openpdffilesinpdfjs = $openbook->openpdffilesinpdfjs;
         $uselegacyviewer = $openbook->uselegacyviewer;
 
-        $openbookurl = new \moodle_url('/mod/openbook/view.php', [
-            'id' => $this->openbookcm->id,
-        ]);
-        $a = \html_writer::link($openbookurl, format_string($openbook->name), ['target' => '_blank']);
+        if ($this->disableopenbooklink) {
+            $a = format_string($openbook->name);
+        } else {
+            $openbookurl = new \moodle_url('/mod/openbook/view.php', [
+                'id' => $this->openbookcm->id,
+            ]);
+            $a = \html_writer::link($openbookurl, format_string($openbook->name), ['target' => '_blank']);
+        }
 
         $data = new stdClass();
         $data->openbooklink = get_string('accessgranted', 'block_openbook', $a);
