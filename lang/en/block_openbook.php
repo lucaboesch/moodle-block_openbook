@@ -28,8 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['accessgranted'] = 'Access is granted to the {$a} Openbook resource folder containing these files:';
 $string['blocknotshown'] = 'This block is not shown to students during a quiz attempt:';
-$string['disableopenbooklink'] = 'Show Openbook resource folder name without link';
-$string['disableopenbooklink_help'] = 'If enabled, the name of the linked Openbook resource folder is shown as plain text in the block instead of a link to the activity.';
 $string['openbook:addinstance'] = 'Add a new Openbook resource folder files block';
 $string['pluginname'] = 'Openbook resource folder files';
 $string['privacy:metadata'] = "The Openbook resource folder files plugin doesn't store any personal data.";
@@ -37,3 +35,7 @@ $string['select_openbook'] = 'Take files from this Openbook resource folder';
 $string['set_pagetypepattern'] = 'The "{$a->display}" setting of this block (under "{$a->where}") has to be "{$a->anypage}" or at least "{$a->attemptpage}".';
 $string['set_showblocks'] = 'The quiz setting "{$a->showblocks}" (under "{$a->appearance}") has to be set to "{$a->yes}".';
 $string['title'] = 'Title';
+$string['titlebehaviour'] = 'Title behaviour';
+$string['titlebehaviour_help'] = 'Choose whether the name of the selected Openbook resource folder is shown as a link to the activity or as plain text without a link.';
+$string['titlebehaviour_link'] = 'Link to Openbook resource folder';
+$string['titlebehaviour_nolink'] = 'Show no link';

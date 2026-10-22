@@ -40,8 +40,8 @@ prompted to select which Openbook resource folder from the current course you wa
 For more details, refer to "Block placement" section below.
 
 By default, the block links the name of the selected Openbook resource folder to the activity.
-Enable "Show Openbook resource folder name without link" in the block configuration to show
-the name as plain text instead.
+Set "Title behaviour" in the block configuration to "Show no link" to show the name as plain
+text instead.
 
 Capabilities
 ------------

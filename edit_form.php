@@ -47,10 +47,20 @@ class block_openbook_edit_form extends block_edit_form {
         }
         $mform->addElement('select', 'config_openbook', get_string('select_openbook', 'block_openbook'), $openbooks);
 
-        // Option to show the Openbook resource folder name without a link to the activity.
-        $mform->addElement('advcheckbox', 'config_disableopenbooklink', get_string('disableopenbooklink', 'block_openbook'));
-        $mform->addHelpButton('config_disableopenbooklink', 'disableopenbooklink', 'block_openbook');
-        $mform->setDefault('config_disableopenbooklink', 0);
+        // Whether the Openbook resource folder name is linked to the activity.
+        $titlebehaviours = [
+            0 => get_string('titlebehaviour_link', 'block_openbook'),
+            1 => get_string('titlebehaviour_nolink', 'block_openbook'),
+        ];
+        $mform->addElement(
+            'select',
+            'config_titlebehaviour',
+            get_string('titlebehaviour', 'block_openbook'),
+            $titlebehaviours
+        );
+        $mform->addHelpButton('config_titlebehaviour', 'titlebehaviour', 'block_openbook');
+        $mform->setType('config_titlebehaviour', PARAM_INT);
+        $mform->setDefault('config_titlebehaviour', 0);
     }
 
     /**
