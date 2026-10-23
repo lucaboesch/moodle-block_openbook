@@ -4,6 +4,10 @@ moodle-block_openbook
 Changes
 -------
 
+### v5.3-r3
+
+* 2026-10-23 - Feature: Allow to suppress the link to the openbook activity
+
 ### v5.3-r2
 
 * 2026-10-03 - Fixed: remap the referenced openbook activity when a course is backed up/restored or imported.
