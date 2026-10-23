@@ -85,10 +85,9 @@ class block_openbook extends block_base {
     /**
      * If this block belongs to a activity context, then return that activity's id.
      * Otherwise, return 0.
-     * @return stdclass the activity record.
+     * @return stdclass the activity course module.
      */
     public function get_owning_activity() {
-        global $DB;
 
         // Set some defaults.
         $result = new stdClass();
@@ -188,7 +187,10 @@ class block_openbook extends block_base {
         }
 
         $openbookcm = $this->get_openbook_cm();
-        if (isset($this->config->openbook) && $openbookcm !== null) {
+        if (
+            isset($this->config->openbook) && $openbookcm !== null
+            && !empty($openbookcm->uservisible)
+        ) {
             $renderable = new \block_openbook\output\main(
                 $this->config->openbook,
                 $this->get_openbook_cm(),

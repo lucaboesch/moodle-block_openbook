@@ -91,13 +91,12 @@ class main implements renderable, templatable {
         $data->openbooklink = get_string('accessgranted', 'block_openbook', $a);
 
         // Group handling: if activity is groupwise (separate groups), restrict files to user's group.
-        $openbookcm = get_coursemodule_from_instance(
-            'openbook',
-            $this->openbookid,
-            0,
-            false,
-            MUST_EXIST
-        );
+        // The openbook course module may be a lightweight stdClass (only 'id' and 'uservisible'),
+        // so fetch a full record for the group API, which needs 'course', 'groupmode' and 'groupingid'.
+        $openbookcm = $this->openbookcm;
+        if (!($openbookcm instanceof cm_info)) {
+            $openbookcm = get_coursemodule_from_id('openbook', $this->openbookcm->id, 0, false, MUST_EXIST);
+        }
         $groupwiseactivity = groups_get_activity_group($openbookcm);
         $grouprestricted = !empty($groupwiseactivity);
 
@@ -106,7 +105,7 @@ class main implements renderable, templatable {
         $teacherfiles = [];
 
         // Determine whether current user can view all groups.
-        $cmcontext = \context_module::instance($openbookcm->id);
+        $cmcontext = \context_module::instance($this->openbookcm->id);
         $canviewallgroups = has_capability('moodle/site:accessallgroups', $cmcontext);
 
         // Prepare possible IN-clause for members of the same group(s).
