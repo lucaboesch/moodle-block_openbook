@@ -77,7 +77,7 @@ Feature: Basic tests for Openbook resource folder files
     Then "Openbook resource folder 1" "link" should exist in the "Openbook resource folder files" "block"
     And I turn editing mode on
     And I configure the "Openbook resource folder files" block
-    And I set the field "Title behaviour" to "Show no link"
+    And I set the field "Link in introduction" to "Show no link"
     And I press "Save changes"
     And I should see "Openbook resource folder 1" in the "Openbook resource folder files" "block"
     And "Openbook resource folder 1" "link" should not exist in the "Openbook resource folder files" "block"

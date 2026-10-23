@@ -194,7 +194,7 @@ class block_openbook extends block_base {
                 $this->get_openbook_cm(),
                 $this->get_owning_activity(),
                 $this->instance->pagetypepattern,
-                !empty($this->config->titlebehaviour),
+                !empty($this->config->introductionlink),
             );
             $renderer = $this->page->get_renderer('block_openbook');
 
