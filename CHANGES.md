@@ -4,6 +4,10 @@ moodle-block_openbook
 Changes
 -------
 
+### v5.3-r4
+
+* 2026-10-23 - Fixed: Some reccomendation by MDL Shield
+
 ### v5.3-r3
 
 * 2026-10-23 - Feature: Allow to suppress the link to the openbook activity
