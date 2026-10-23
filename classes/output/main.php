@@ -97,8 +97,8 @@ class main implements renderable, templatable {
         if (!($openbookcm instanceof cm_info)) {
             $openbookcm = get_coursemodule_from_id('openbook', $this->openbookcm->id, 0, false, MUST_EXIST);
         }
-        $groupwiseactivity = groups_get_activity_group($openbookcm);
-        $grouprestricted = !empty($groupwiseactivity);
+        $groupmode = groups_get_activity_groupmode($openbookcm);
+        $grouprestricted = ($groupmode == SEPARATEGROUPS);
 
         // Teacher files.
 
@@ -115,13 +115,14 @@ class main implements renderable, templatable {
         if ($grouprestricted && !$canviewallgroups) {
             $allmembers = [];
             // All other group member's user ids that are in the same group(s) as the current user in this course.
+            // groups_get_user_groups() returns Array[groupingid][groupid]; index by the activity's grouping
+            // (grouping id 0 means all of the user's groups in the course).
             $currentusergroups = groups_get_user_groups($openbookcm->course, $USER->id);
-            foreach ($currentusergroups as $coursegroup) {
-                foreach ($coursegroup as $groupid) {
-                    $groupusers = groups_get_members($groupid, 'u.id');
-                    if (!empty($groupusers)) {
-                        $allmembers = array_merge($allmembers, $groupusers);
-                    }
+            $usergroupids = $currentusergroups[$openbookcm->groupingid] ?? [];
+            foreach ($usergroupids as $groupid) {
+                $groupusers = groups_get_members($groupid, 'u.id');
+                if (!empty($groupusers)) {
+                    $allmembers = array_merge($allmembers, $groupusers);
                 }
             }
 
@@ -159,7 +160,7 @@ class main implements renderable, templatable {
                     'mod_openbook',
                     'commonteacherfiles',
                     $f->itemid,
-                    '/',
+                    $f->filepath,
                     $f->filename,
                     true
                 );
@@ -218,7 +219,7 @@ class main implements renderable, templatable {
                 $andstudentapproval = " AND of.studentapproval = 1";
             }
 
-            $sql = "SELECT f.*, of.*
+            $sql = "SELECT f.id, f.contextid, f.component, f.filearea, f.itemid, f.filepath, f.filename, f.mimetype
               FROM {files} f
               JOIN {openbook_file} of ON of.fileid = f.id
               JOIN {context} c ON c.id = f.contextid AND c.contextlevel = :contextlevel
@@ -247,7 +248,7 @@ class main implements renderable, templatable {
                         'mod_openbook',
                         'attachment',
                         $f->itemid,
-                        '/',
+                        $f->filepath,
                         $f->filename,
                         true
                     );
@@ -297,7 +298,7 @@ class main implements renderable, templatable {
             $andteacherapproval = " AND of.teacherapproval = 1";
         }
 
-        $sql = "SELECT f.*, of.*
+        $sql = "SELECT f.id, f.contextid, f.component, f.filearea, f.itemid, f.filepath, f.filename, f.mimetype
           FROM {files} f
           JOIN {openbook_file} of ON of.fileid = f.id
           JOIN {context} c ON c.id = f.contextid AND c.contextlevel = :contextlevel
@@ -330,7 +331,7 @@ class main implements renderable, templatable {
                     'mod_openbook',
                     'attachment',
                     $f->itemid,
-                    '/',
+                    $f->filepath,
                     $f->filename,
                     true
                 );
