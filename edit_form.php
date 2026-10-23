@@ -46,6 +46,21 @@ class block_openbook_edit_form extends block_edit_form {
             $openbooks[$key] = strip_tags(format_string($value, true));
         }
         $mform->addElement('select', 'config_openbook', get_string('select_openbook', 'block_openbook'), $openbooks);
+
+        // Whether the Openbook resource folder name in the introduction is linked to the activity.
+        $introductionlinkoptions = [
+            0 => get_string('introductionlink_link', 'block_openbook'),
+            1 => get_string('introductionlink_nolink', 'block_openbook'),
+        ];
+        $mform->addElement(
+            'select',
+            'config_introductionlink',
+            get_string('introductionlink', 'block_openbook'),
+            $introductionlinkoptions
+        );
+        $mform->addHelpButton('config_introductionlink', 'introductionlink', 'block_openbook');
+        $mform->setType('config_introductionlink', PARAM_INT);
+        $mform->setDefault('config_introductionlink', 0);
     }
 
     /**
