@@ -28,3 +28,6 @@ labels:
 #     caption: Main view
 links:
   issues: https://github.com/lucaboesch/moodle-block_openbook/issues
+badges:
+  - endpoint: https://mdlshield.com/api/badge/block_openbook
+    link: https://mdlshield.com/plugins/block_openbook
